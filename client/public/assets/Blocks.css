@@ -781,3 +781,7 @@
 .color-block-360 {
   fill: hsl(360, 100%, 50%);
 }
+
+.color-block-386 {
+  fill: #eeeeee;
+}

@@ -48,7 +48,7 @@ class Home extends Component {
   componentDidMount() {
     const obj = getFromStorage("the_main_app");
     console.log(obj);
-    if (obj && obj.token) {
+    if (obj && obj.token && obj.data) {
       const { token } = obj;
       // Verify token
       fetch("/api/account/verify?token=" + token)
@@ -58,7 +58,8 @@ class Home extends Component {
             this.setState({
               token,
               isLoading: false,
-              data: obj.data
+              data: obj.data,
+              signInEmail: obj.email
             });
           } else {
             this.setState({
@@ -161,13 +162,13 @@ class Home extends Component {
       .then(json => {
         console.log("json", json);
         if (json.success) {
-          setInStorage("the_main_app", { token: json.token, data: json.data });
+          setInStorage("the_main_app", { token: json.token, data: json.data, email: signInEmail });
           setTimeout(() => {
             this.setState({
               signInError: "",
               isLoading: false,
               signInPassword: "",
-              signInEmail: "",
+              signInEmail: signInEmail,
               token: json.token,
               data: json.data
             });
@@ -195,7 +196,9 @@ class Home extends Component {
           if (json.success) {
             this.setState({
               token: "",
-              isLoading: false
+              isLoading: false,
+              data: [],
+              email: null
             });
           } else {
             this.setState({
@@ -222,9 +225,8 @@ class Home extends Component {
       signUpError,
       data
     } = this.state;
-    console.log(data);
 
-    if (!token) {
+    if (!token || (!data && !token)) {
       return (
         <div>
           <LoadingScreen
@@ -298,7 +300,7 @@ class Home extends Component {
         <Grid doubling columns={2} divided>
           <Grid.Row>
             <Grid.Column>
-              <Calendar />
+              <Calendar data={data} email={signInEmail} />
             </Grid.Column>
             <Grid.Column>
               <DynamicGraph />

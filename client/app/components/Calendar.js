@@ -9,6 +9,10 @@ import "../../public/assets/Main.css";
 import "../../public/assets/Blocks.css";
 import "react-input-range/lib/css/index.css";
 
+import "whatwg-fetch";
+import { getFromStorage, setInStorage } from "./../utils/storage.js";
+
+
 import { calcColor, getPhrase } from "./../utils/utils";
 
 const monthNames = [
@@ -34,9 +38,9 @@ class Calendar extends Component {
       input1: 0,
       input2: 0,
       input3: 0,
-      startDate: this.getStartDate(),
+      startDate: this.setStartDate(),
       endDate: this.getEndDate(),
-      values: this.getEmptyValues(this.getStartDate())
+      values: props.data[0].dec
     };
     //Function binding
     this.openModal = this.openModal.bind(this);
@@ -45,19 +49,37 @@ class Calendar extends Component {
   }
 
   //Date Functions
-  getStartDate() {
-    return new Date(2018, 11, 1);
+  setStartDate() {
+    const month = new Date().getMonth();
+    const year = new Date().getFullYear();
+
+    return new Date(year + 1, month, 1);
   }
 
   getEndDate() {
-    return new Date(2018, 11, 31);
+    const month = new Date().getMonth();
+    const year = new Date().getFullYear();
+
+    let d = new Date(year + 1, month, 1);
+
+    return this.shiftDate(d, this.getNumDays(month));
+  }
+
+  getNumDays(date) {
+    if ([1, 3, 5, 7, 8, 10, 12].includes(date)) {
+      return 31;
+    } else if ([4, 6, 9, 11].includes(date)) {
+      return 30;
+    } else {
+      return 29;
+    }
   }
 
   getEmptyValues(date) {
     var n = 0;
-    if ([1, 3, 5, 7, 8, 10, 12].includes(date.getMonth() + 1)) {
+    if ([1, 3, 5, 7, 8, 10, 12].includes(date.getMonth())) {
       n = 31;
-    } else if ([4, 6, 9, 11].includes(date.getMonth() + 1)) {
+    } else if ([4, 6, 9, 11].includes(date.getMonth())) {
       n = 30;
     } else {
       n = 29;
@@ -97,28 +119,77 @@ class Calendar extends Component {
   }
 
   handleSubmit(event) {
+  
     let cur = this.state.values;
     cur[this.state.date - 1] = {
       date: cur[this.state.date - 1].date,
-      colorValue: calcColor([
-        this.state.input1,
-        this.state.input2,
-        this.state.input3
-      ])
+      colorData: [this.state.input1, this.state.input2, this.state.input3]
     };
-    this.setState({ values: cur });
+
+    let cur2 = this.props.data
+    cur2[0].dec = cur;
+
+    console.log(cur2);
+
+    this.setState({
+      isLoading: true
+    });
+
+    // Post request to backend
+    fetch("/api/account/update", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: this.props.email,
+        newData: cur2
+      })
+    })
+      .then(res => res.json())
+      .then(json => {
+        console.log("json", json);
+        if (json.success) {
+          setInStorage("the_main_app", { token: json.token, data: json.data, email: this.props.email });
+          setTimeout(() => {
+            this.setState({
+              signInError: "",
+              isLoading: false,
+              token: json.token,
+              data: json.data,
+              email: this.props.email
+            });
+          }, 0);
+        } else {
+          this.setState({
+            signInError: json.message,
+            isLoading: false
+          });
+        }
+      });
     event.preventDefault();
   }
+
+  // handleSubmit(event) {
+  //   let cur = this.state.values;
+  //   cur[this.state.date - 1] = {
+  //     date: cur[this.state.date - 1].date,
+  //     colorData: [this.state.input1, this.state.input2, this.state.input3]
+  //   };
+  //   this.setState({ values: cur });
+  //   event.preventDefault();
+  // }
 
   componentDidMount() {}
 
   render() {
+    console.log(this.props.data);
     return (
       <div className="mainContainer">
         <Icon link size="big" name="arrow circle left" />
         <div className="calendar-container">
           <CalendarHeatmap
-            startDate={this.shiftDate(this.getStartDate(), -1)}
+            startDate={this.shiftDate(this.state.startDate, -1)}
             endDate={this.state.endDate}
             values={this.state.values}
             showMonthLabels={false}
@@ -126,26 +197,36 @@ class Calendar extends Component {
             showWeekdayLabels={false}
             showOutOfRangeDays={false}
             classForValue={value => {
+              let colorValue = calcColor(value.colorData);
               if (!value) {
                 return "color-null";
-              } else if (value.colorValue == 0) {
+              } else if (colorValue == 0) {
                 return "color-empty";
               }
-              return `color-block-${value.colorValue}`;
+              return `color-block-${colorValue}`;
             }}
             tooltipDataAttrs={value => {
               return {
-                "data-tip": `Day ${value.date.getDate()} : ${getPhrase(
-                  value.colorValue
-                )}`
+                "data-tip": `Day ${new Date(
+                  value.date
+                ).getDate()} : ${getPhrase(calcColor(value.colorData))}`
               };
+
+              //   console.log(value);
+              //   try {
+              //     "data-tip": `Day ${value.date.getDate()} : ${getPhrase(
+              //       value.colorValue
+              //     )}` }
+              // } catch (error) {
+              //   console.log(error);
+              //   }
             }}
             onClick={value => {
               if (value) {
                 this.setState({
-                  currentDate: this.getDateData(value.date)
+                  currentDate: this.getDateData(new Date(value.date))
                 });
-                this.setState({ date: value.date.getDate() });
+                this.setState({ date: new Date(value.date).getDate() });
                 this.openModal();
               }
             }}

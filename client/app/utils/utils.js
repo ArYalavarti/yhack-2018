@@ -78,7 +78,7 @@ export function getPhrase(colorValue) {
     for (var i = 1; i < days + 1; i++) {
         dates.push({
             date: new Date(year, month, i),
-            colorData: []});
+            colorData: [-1, -1, -1]});
     }
     return dates;
   }
