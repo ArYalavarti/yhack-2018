@@ -1,3 +1,11 @@
 export function calcColor(inputs) {
-    return parseInt(inputs[0]) + parseInt(inputs[1]) + parseInt(inputs[2] );
+  var sum = inputs.reduce(adder);
+  var average = sum / inputs.length;
+
+  var hue = 360 - (average * 26);
+  return hue;
   }
+
+  function adder(total, value, index, array) {
+    return total + value;
+}
