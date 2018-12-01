@@ -1,0 +1,69 @@
+a,
+.selectUnderline {
+  color: #0e1c33;
+  display: inline-block;
+}
+
+a:hover {
+  text-decoration: none;
+  color: #0e1c33;
+}
+
+a:after,
+.selectUnderline:after {
+  content: "";
+  width: 0px;
+  height: 3px;
+  display: block;
+  background: #fbb0a9;
+  transition: 300ms;
+}
+
+a:hover:after,
+.selectUnderline:hover:after {
+  width: 100%;
+  color: #0e1c33;
+}
+
+.logo {
+  margin-top: 20px;
+  height: 80px;
+  width: 80px;
+}
+
+.header {
+  background-color: #0e1c33;
+  height: 15%;
+  text-align: center;
+  padding: 10px;
+}
+
+.footer {
+  background-color: #0e1c33;
+  color: white;
+  text-align: center;
+  font-size: 12px;
+  height: 22%;
+  padding: 15px;
+}
+
+.mainContainer {
+  text-align: center;
+  min-height: 100vh;
+}
+
+
+.title {
+  font-family: "Raleway", sans-serif;
+  font-size: 1.5em;
+  color: whitesmoke;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
