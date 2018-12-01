@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, Form, Input} from "semantic-ui-react";
+import { Grid, Form, Input } from "semantic-ui-react";
 import CalendarHeatmap from "react-calendar-heatmap";
 import ReactTooltip from "react-tooltip";
 import Modal from "react-responsive-modal";
@@ -30,29 +30,50 @@ class Calendar extends Component {
       show: false,
       startDate: this.getStartDate(),
       endDate: this.getEndDate(),
-      values: this.getValues()
+      values: this.getEmptyValues(this.getStartDate())
     };
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    console.log(this.state);
+  }
+
+  calcColor(inputs) {
+
+    let x = parseInt(inputs[0]) + parseInt(inputs[1]) + parseInt(inputs[2] )
+    console.log(x);
+    return x;
   }
 
   getStartDate() {
-    return new Date("2018-12-01");
+    return new Date(2018, 11, 1);
   }
 
   getEndDate() {
-    return new Date("2018-12-31");
+    return new Date(2018, 11, 31);
   }
 
-  getValues() {
-    return this.getRange(31).map(index => {
+  getEmptyValues(date) {
+    var n = 0;
+    if ([1, 3, 5, 7, 8, 10, 12].includes(date.getMonth() + 1)) {
+      n = 31;
+    } else if ([4, 6, 9, 11].includes(date.getMonth() + 1)) {
+      n = 30;
+    } else {
+      n = 29;
+    }
+
+    let x = this.getRange(n).map(index => {
+      console.log(this.shiftDate(this.getStartDate(), index));
       return {
-        date: this.shiftDate(today, index),
-        count: 0
+        date: this.shiftDate(this.getStartDate(), index),
+        colorValue: 0
       };
     });
+    console.log(x);
+    return x;
+
   }
 
   getDateData(date) {
@@ -80,20 +101,22 @@ class Calendar extends Component {
   }
 
   handleChange(event) {
-    this.setState({ value: event.target.value });
+    const name = event.target.name;
+    this.setState({ [name]: event.target.value });
   }
 
   handleSubmit(event) {
     let cur = this.state.values;
-    cur[this.state.date] = {
-      date: cur[this.state.date].date,
-      count: parseInt(this.state.value)
-    }
-    
-    
-    
-
-    this.setState({values: cur});
+    cur[this.state.date - 1] = {
+      date: cur[this.state.date - 1].date,
+      colorValue: this.calcColor([
+        this.state.input1,
+        this.state.input2,
+        this.state.input3
+      ])
+    };
+    console.log(cur);
+    this.setState({ values: cur });
     event.preventDefault();
   }
 
@@ -106,23 +129,28 @@ class Calendar extends Component {
         <Grid>
           <div className="calendar-container">
             <CalendarHeatmap
-              startDate={this.state.startDate}
+              startDate={this.shiftDate(this.getStartDate(), -1)}
               endDate={this.state.endDate}
               values={this.state.values}
+              showMonthLabels={false}
               showOutOfRangeDays={true}
               classForValue={value => {
                 if (!value) {
                   return "color-null";
-                } else if (value.count == 0) {
+                } else if (value.colorValue == 0) {
                   return "color-empty";
                 }
-                return `color-gitlab-${value.count}`;
+                return `color-block-${value.colorValue}`;
               }}
-              tooltipDataAttrs={value => {}}
+              tooltipDataAttrs={value => {
+              }}
               onClick={value => {
-                this.setState({ currentDate: this.getDateData(value.date) });
-                this.setState({ date: value.date.getDate() });
-                this.openModal();
+                console.log(value);
+                if (value) {
+                  this.setState({ currentDate: this.getDateData(value.date) });
+                  this.setState({ date: value.date.getDate() });
+                  this.openModal();
+                }
               }}
             />
           </div>
@@ -133,13 +161,18 @@ class Calendar extends Component {
             <p> Update your mood for {this.state.currentDate} </p>
             <Form onSubmit={this.handleSubmit}>
               <label>
-                Name:
-                <Input
-                  type="text"
-                  value={this.state.value}
-                  onChange={this.handleChange}
-                />
+                Input1:
+                <Input type="text" name="input1" onChange={this.handleChange} />
               </label>
+              <label>
+                Input2:
+                <Input type="text" name="input2" onChange={this.handleChange} />
+              </label>
+              <label>
+                Input3:
+                <Input type="text" name="input3" onChange={this.handleChange} />
+              </label>
+
               <Input type="submit" value="Submit" />
             </Form>
           </Modal>

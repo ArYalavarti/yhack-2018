@@ -55,6 +55,7 @@ a:hover:after,
 
 .calendar-container {
   text-align: center;
+  margin-left: 20px;
   padding: 30px;
   height: auto;
   width: 400px;
@@ -94,6 +95,11 @@ a:hover:after,
   align-items: center;
 }
 
+
+.color-block-3 {
+  fill: hsl(100, 100%, 50%);
+}
+
 .color-empty {
   fill: #eeeeee;
 }
@@ -101,7 +107,6 @@ a:hover:after,
 .color-null {
   fill: gray;
 }
-
 /*
  * react-calendar-heatmap styles
  *
@@ -109,18 +114,13 @@ a:hover:after,
  * The github and gitlab color scales are provided for reference.
  */
 
-.react-calendar-heatmap text {
+ .react-calendar-heatmap text {
   font-size: 10px;
   fill: #aaa;
 }
 
 .react-calendar-heatmap .react-calendar-heatmap-small-text {
   font-size: 5px;
-}
-
-.react-calendar-heatmap rect:hover {
-  stroke: #555;
-  stroke-width: 1px;
 }
 
 /*
