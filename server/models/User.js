@@ -1,13 +1,35 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+
+// const YearSchema = new mongoose.Schema({
+//   months: {
+//     type: Map,
+//     of: MonthSchema
+//   }
+// });
+
+// const MonthSchema = new mongoose.Schema({
+//   month: {
+//     type: [DaySchema],
+//     default: []
+//   }
+// });
+
+// const DaySchema = new mongoose.Schema({
+//   date: {
+//     type: Date
+//   },
+//   colorData: [Number]
+// });
+
 const UserSchema = new mongoose.Schema({
   email: {
     type: String,
-    default: ''
+    default: ""
   },
   password: {
     type: String,
-    default: ''
+    default: ""
   },
   isDeleted: {
     type: Boolean,
@@ -16,6 +38,10 @@ const UserSchema = new mongoose.Schema({
   signUpDate: {
     type: Date,
     default: Date.now()
+  },
+  moodData: {
+    type: [mongoose.SchemaTypes.Mixed],
+    default: []
   }
 });
 UserSchema.methods.generateHash = function(password) {
@@ -24,4 +50,4 @@ UserSchema.methods.generateHash = function(password) {
 UserSchema.methods.validPassword = function(password) {
   return bcrypt.compareSync(password, this.password);
 };
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model("User", UserSchema);

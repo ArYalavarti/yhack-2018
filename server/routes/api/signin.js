@@ -14,6 +14,9 @@ module.exports = (app) => {
     let {
       email
     } = body;
+    let {
+      moodData
+    } = body;
 
     if (!email) {
       return res.send({
@@ -54,6 +57,7 @@ module.exports = (app) => {
 
       newUser.email = email;
       newUser.password = newUser.generateHash(password);
+      newUser.moodData = moodData;
       newUser.save((err, user) => {
         if (err) {
           return res.send({

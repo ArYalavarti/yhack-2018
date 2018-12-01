@@ -39,3 +39,47 @@ export function getPhrase(colorValue) {
   } 
   return phrase;
   }
+
+  export function initializeData(year) {
+    var leapYear = year % 4 == 0;
+  
+    var january = makeMonth(year, 0, 31);
+    var february = makeMonth(year, 1, leapYear ? 29 : 28);
+    var march = makeMonth(year, 2, 31);
+    var april = makeMonth(year, 3, 30);
+    var may = makeMonth(year, 4, 31);
+    var june = makeMonth(year, 5, 30);
+    var july = makeMonth(year, 6, 31);
+    var august = makeMonth(year, 7, 31);
+    var september = makeMonth(year, 8, 30);
+    var october = makeMonth(year, 9, 31);
+    var november = makeMonth(year, 10, 30);
+    var december = makeMonth(year, 11, 31);
+  
+    return {
+        jan: january,
+        feb: february,
+        mar: march,
+        apr: april,
+        may: may,
+        jun: june,
+        jul: july,
+        aug: august,
+        sep: september,
+        oct: october,
+        nov: november,
+        dec: december}
+  
+  }
+  
+  function makeMonth(year, month, days) {
+    var dates = []
+  
+    for (var i = 1; i < days + 1; i++) {
+        dates.push({
+            date: new Date(year, month, i),
+            colorData: []});
+    }
+    return dates;
+  }
+  

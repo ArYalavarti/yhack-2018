@@ -3,11 +3,13 @@ import { Grid, Form, Input, Icon, Button } from "semantic-ui-react";
 import "whatwg-fetch";
 
 import { getFromStorage, setInStorage } from "./../utils/storage.js";
+import { initializeData } from "./../utils/utils.js";
 
 import Header from "./../components/Header";
 import Footer from "./../components/Footer";
 import Calendar from "./../components/Calendar";
 import DynamicGraph from "./../components/DynamicGraph";
+import LoadingScreen from "react-loading-screen";
 
 import "../../public/assets/Main.css";
 
@@ -101,6 +103,8 @@ class Home extends Component {
       isLoading: true
     });
 
+    console.log(initializeData(2019));
+
     // Post request to backend
     fetch("/api/account/signup", {
       method: "POST",
@@ -109,7 +113,8 @@ class Home extends Component {
       },
       body: JSON.stringify({
         email: signUpEmail,
-        password: signUpPassword
+        password: signUpPassword,
+        moodData: initializeData(2019)
       })
     })
       .then(res => res.json())
@@ -155,13 +160,15 @@ class Home extends Component {
         console.log("json", json);
         if (json.success) {
           setInStorage("the_main_app", { token: json.token });
-          this.setState({
-            signInError: "",
-            isLoading: false,
-            signInPassword: "",
-            signInEmail: "",
-            token: json.token
-          });
+          setTimeout(() => {
+            this.setState({
+              signInError: "",
+              isLoading: false,
+              signInPassword: "",
+              signInEmail: "",
+              token: json.token
+            });
+          }, 1000);
         } else {
           this.setState({
             signInError: json.message,
@@ -212,23 +219,22 @@ class Home extends Component {
       signUpError
     } = this.state;
 
-    if (isLoading) {
-      return (
-        <div>
-          <p>Loading...</p>
-        </div>
-      );
-    }
-
     if (!token) {
       return (
         <div>
+          <LoadingScreen
+            loading={isLoading}
+            bgColor="#f1f1f1"
+            spinnerColor="coral"
+            textColor="#676767"
+            text="Please Wait!"
+          />
+
           <Grid verticalAlign="middle" centered>
             <Grid.Row centered>
               <Grid.Column>
                 <div className="loginScreen">
                   <div className="formContainer">
-                    <h1>Mood Pro!</h1>
                     <div className="loginForm">
                       {signInError ? <p>{signInError}</p> : null}
                       <h2 className="selectUnderline">Sign In</h2>
@@ -293,8 +299,8 @@ class Home extends Component {
               <DynamicGraph />
             </Grid.Column>
           </Grid.Row>
-          <Button onClick={this.logout}>Logout</Button>
         </Grid>
+        <Button onClick={this.logout}>Logout</Button>
         <Footer />
       </div>
     );
