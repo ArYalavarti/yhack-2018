@@ -1,13 +1,15 @@
 import React, { Component } from "react";
-import { Grid, Form, Input } from "semantic-ui-react";
+import { Grid, Form, Input, Icon } from "semantic-ui-react";
 import CalendarHeatmap from "react-calendar-heatmap";
 import ReactTooltip from "react-tooltip";
 import Modal from "react-responsive-modal";
+import InputRange from "react-input-range";
 
 import "./../assets/Main.css";
 import "./../assets/Blocks.css";
+import "react-input-range/lib/css/index.css";
 
-import {calcColor} from "./../utils/utils";
+import { calcColor } from "./../utils/utils";
 
 const today = new Date();
 
@@ -31,13 +33,15 @@ class Calendar extends Component {
     super(props);
     this.state = {
       show: false,
+      input1: 0,
+      input2: 0,
+      input3: 0,
       startDate: this.getStartDate(),
       endDate: this.getEndDate(),
       values: this.getEmptyValues(this.getStartDate())
     };
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
-    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -66,7 +70,6 @@ class Calendar extends Component {
       };
     });
     return x;
-
   }
 
   getDateData(date) {
@@ -90,12 +93,7 @@ class Calendar extends Component {
   }
 
   closeModal() {
-    this.setState({ show: false });
-  }
-
-  handleChange(event) {
-    const name = event.target.name;
-    this.setState({ [name]: event.target.value });
+    this.setState({ show: false, input1: 0, input2: 0, input3: 0 });
   }
 
   handleSubmit(event) {
@@ -117,56 +115,88 @@ class Calendar extends Component {
   render() {
     return (
       <div className="mainContainer">
-        <Grid>
-          <div className="calendar-container">
-            <CalendarHeatmap
-              startDate={this.shiftDate(this.getStartDate(), -1)}
-              endDate={this.state.endDate}
-              values={this.state.values}
-              showMonthLabels={false}
-              showOutOfRangeDays={true}
-              classForValue={value => {
-                if (!value) {
-                  return "color-null";
-                } else if (value.colorValue == 0) {
-                  return "color-empty";
-                }
-                return `color-block-${value.colorValue}`;
-              }}
-              tooltipDataAttrs={value => {
-              }}
-              onClick={value => {
-                console.log(value);
-                if (value) {
-                  this.setState({ currentDate: this.getDateData(value.date) });
-                  this.setState({ date: value.date.getDate() });
-                  this.openModal();
-                }
-              }}
-            />
-          </div>
-          <ReactTooltip />
+        <Grid doubling columns={2} divided>
+          <Grid.Row>
+            <Grid.Column>
+              <Icon link size="big" name="arrow circle left" />
+              <div className="calendar-container">
+                <CalendarHeatmap
+                  startDate={this.shiftDate(this.getStartDate(), -1)}
+                  endDate={this.state.endDate}
+                  values={this.state.values}
+                  showMonthLabels={false}
+                  showOutOfRangeDays={true}
+                  classForValue={value => {
+                    if (!value) {
+                      return "color-null";
+                    } else if (value.colorValue == 0) {
+                      return "color-empty";
+                    }
+                    return `color-block-${value.colorValue}`;
+                  }}
+                  tooltipDataAttrs={value => {}}
+                  onClick={value => {
+                    if (value) {
+                      this.setState({
+                        currentDate: this.getDateData(value.date)
+                      });
+                      this.setState({ date: value.date.getDate() });
+                      this.openModal();
+                    }
+                  }}
+                />
+              </div>
+              <ReactTooltip />
 
-          <Modal open={this.state.show} onClose={this.closeModal} center>
-            <h2 className="modalHeading">Update Mood!</h2>
-            <p> Update your mood for {this.state.currentDate} </p>
-            <Form onSubmit={this.handleSubmit}>
-              <label>
-                Input1:
-                <Input type="text" name="input1" onChange={this.handleChange} />
-              </label>
-              <label>
-                Input2:
-                <Input type="text" name="input2" onChange={this.handleChange} />
-              </label>
-              <label>
-                Input3:
-                <Input type="text" name="input3" onChange={this.handleChange} />
-              </label>
+              <Modal
+                className="heroModal"
+                open={this.state.show}
+                onClose={this.closeModal}
+                center
+              >
+                <h2 className="modalHeading">Update Mood!</h2>
+                <div className="modalBody">
+                  <p> Update your mood for {this.state.currentDate} </p>
+                  <Form onSubmit={this.handleSubmit}>
+                    Happiness <br /> <br />
+                    <InputRange
+                      maxValue={10}
+                      minValue={0}
+                      value={this.state.input1}
+                      onChange={value => this.setState({ input1: value })}
+                    />
+                    <br />
+                    <br />
+                    Productivity <br />
+                    <br />
+                    <InputRange
+                      maxValue={10}
+                      minValue={0}
+                      value={this.state.input2}
+                      onChange={value => this.setState({ input2: value })}
+                    />
+                    <br />
+                    <br />
+                    Sleep <br />
+                    <br />
+                    <InputRange
+                      maxValue={10}
+                      minValue={0}
+                      value={this.state.input3}
+                      onChange={value => this.setState({ input3: value })}
+                    />
+                    <br />
+                    <br />
+                    <Input type="submit" value="Submit" />
+                  </Form>
+                </div>
+              </Modal>
+            </Grid.Column>
 
-              <Input type="submit" value="Submit" />
-            </Form>
-          </Modal>
+            <Grid.Column>
+              Graph will go here!
+            </Grid.Column>
+          </Grid.Row>
         </Grid>
       </div>
     );
