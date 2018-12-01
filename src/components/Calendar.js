@@ -5,6 +5,9 @@ import ReactTooltip from "react-tooltip";
 import Modal from "react-responsive-modal";
 
 import "./../assets/Main.css";
+import "./../assets/Blocks.css";
+
+import {calcColor} from "./../utils/utils";
 
 const today = new Date();
 
@@ -37,13 +40,6 @@ class Calendar extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     console.log(this.state);
-  }
-
-  calcColor(inputs) {
-
-    let x = parseInt(inputs[0]) + parseInt(inputs[1]) + parseInt(inputs[2] )
-    console.log(x);
-    return x;
   }
 
   getStartDate() {
@@ -109,7 +105,7 @@ class Calendar extends Component {
     let cur = this.state.values;
     cur[this.state.date - 1] = {
       date: cur[this.state.date - 1].date,
-      colorValue: this.calcColor([
+      colorValue: calcColor([
         this.state.input1,
         this.state.input2,
         this.state.input3
