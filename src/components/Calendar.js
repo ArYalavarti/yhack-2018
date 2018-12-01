@@ -39,7 +39,6 @@ class Calendar extends Component {
     this.closeModal = this.closeModal.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    console.log(this.state);
   }
 
   getStartDate() {
@@ -61,13 +60,11 @@ class Calendar extends Component {
     }
 
     let x = this.getRange(n).map(index => {
-      console.log(this.shiftDate(this.getStartDate(), index));
       return {
         date: this.shiftDate(this.getStartDate(), index),
         colorValue: 0
       };
     });
-    console.log(x);
     return x;
 
   }
@@ -111,7 +108,6 @@ class Calendar extends Component {
         this.state.input3
       ])
     };
-    console.log(cur);
     this.setState({ values: cur });
     event.preventDefault();
   }
@@ -119,7 +115,6 @@ class Calendar extends Component {
   componentDidMount() {}
 
   render() {
-    console.log(this.state.values);
     return (
       <div className="mainContainer">
         <Grid>
