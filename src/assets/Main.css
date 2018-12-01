@@ -95,16 +95,17 @@ a:hover:after,
   align-items: center;
 }
 
-
 .color-empty {
   fill: #eeeeee;
 }
 
 .color-null {
   fill: gray;
+  content: "Joe's Task:";
+
 }
 
- .react-calendar-heatmap text {
+.react-calendar-heatmap text {
   font-size: 10px;
   fill: #aaa;
 }
@@ -112,7 +113,6 @@ a:hover:after,
 .react-calendar-heatmap .react-calendar-heatmap-small-text {
   font-size: 5px;
 }
-
 
 @keyframes App-logo-spin {
   from {

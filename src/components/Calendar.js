@@ -125,7 +125,9 @@ class Calendar extends Component {
                   endDate={this.state.endDate}
                   values={this.state.values}
                   showMonthLabels={false}
-                  showOutOfRangeDays={true}
+                  horizontal={false}
+                  showWeekdayLabels={false}
+                  showOutOfRangeDays={false}
                   classForValue={value => {
                     if (!value) {
                       return "color-null";
@@ -134,7 +136,16 @@ class Calendar extends Component {
                     }
                     return `color-block-${value.colorValue}`;
                   }}
-                  tooltipDataAttrs={value => {}}
+                  tooltipDataAttrs={value => {
+                    console.log(value);
+                    if (!value) {
+                      return "";
+                    } else {
+                      return {
+                        "data-tip": `Day ${value.date.getDate()} : ${value.colorValue}`
+                      };
+                    }
+                  }}
                   onClick={value => {
                     if (value) {
                       this.setState({
@@ -193,9 +204,7 @@ class Calendar extends Component {
               </Modal>
             </Grid.Column>
 
-            <Grid.Column>
-              Graph will go here!
-            </Grid.Column>
+            <Grid.Column>Graph will go here!</Grid.Column>
           </Grid.Row>
         </Grid>
       </div>
