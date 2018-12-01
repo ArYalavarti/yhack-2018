@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, Form, Input, Icon } from "semantic-ui-react";
+import { Grid, Form, Input, Icon, Button } from "semantic-ui-react";
 import "whatwg-fetch";
 
 import { getFromStorage, setInStorage } from "./../utils/storage.js";
@@ -156,7 +156,7 @@ class Home extends Component {
         if (json.success) {
           setInStorage("the_main_app", { token: json.token });
           this.setState({
-            signInError: json.message,
+            signInError: "",
             isLoading: false,
             signInPassword: "",
             signInEmail: "",
@@ -223,46 +223,60 @@ class Home extends Component {
     if (!token) {
       return (
         <div>
-          <div>
-            {signInError ? <p>{signInError}</p> : null}
-            <p>Sign In</p>
-            <input
-              type="email"
-              placeholder="Email"
-              value={signInEmail}
-              onChange={this.onTextboxChangeSignInEmail}
-            />
-            <br />
-            <input
-              type="password"
-              placeholder="Password"
-              value={signInPassword}
-              onChange={this.onTextboxChangeSignInPassword}
-            />
-            <br />
-            <button onClick={this.onSignIn}>Sign In</button>
-          </div>
-          <br />
-          <br />
-          <div>
-            {signUpError ? <p>{signUpError}</p> : null}
-            <p>Sign Up</p>
-            <input
-              type="email"
-              placeholder="Email"
-              value={signUpEmail}
-              onChange={this.onTextboxChangeSignUpEmail}
-            />
-            <br />
-            <input
-              type="password"
-              placeholder="Password"
-              value={signUpPassword}
-              onChange={this.onTextboxChangeSignUpPassword}
-            />
-            <br />
-            <button onClick={this.onSignUp}>Sign Up</button>
-          </div>
+          <Grid verticalAlign="middle" centered>
+            <Grid.Row centered>
+              <Grid.Column>
+                <div className="loginScreen">
+                  <div className="formContainer">
+                    <h1>Mood Pro!</h1>
+                    <div className="loginForm">
+                      {signInError ? <p>{signInError}</p> : null}
+                      <h2 className="selectUnderline">Sign In</h2>
+                      <br />
+                      <Input
+                        type="email"
+                        placeholder="Email"
+                        value={signInEmail}
+                        onChange={this.onTextboxChangeSignInEmail}
+                      />
+                      <br />
+                      <Input
+                        type="password"
+                        placeholder="Password"
+                        value={signInPassword}
+                        onChange={this.onTextboxChangeSignInPassword}
+                      />
+                      <br /> <br />
+                      <Button onClick={this.onSignIn}>Sign In</Button>
+                    </div>
+                    <br />
+                    <br />
+                    <div className="loginForm">
+                      {signUpError ? <p>{signUpError}</p> : null}
+                      <h2 className="selectUnderline">Sign Up</h2>
+                      <br />
+                      <Input
+                        type="email"
+                        placeholder="Email"
+                        value={signUpEmail}
+                        onChange={this.onTextboxChangeSignUpEmail}
+                      />
+                      <br />
+                      <Input
+                        type="password"
+                        placeholder="Password"
+                        value={signUpPassword}
+                        onChange={this.onTextboxChangeSignUpPassword}
+                      />
+                      <br />
+                      <br />
+                      <Button onClick={this.onSignUp}>Sign Up</Button>
+                    </div>
+                  </div>
+                </div>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
         </div>
       );
     }
@@ -279,7 +293,7 @@ class Home extends Component {
               <DynamicGraph />
             </Grid.Column>
           </Grid.Row>
-          <button onClick={this.logout}>Logout</button>
+          <Button onClick={this.logout}>Logout</Button>
         </Grid>
         <Footer />
       </div>

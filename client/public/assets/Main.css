@@ -15,7 +15,7 @@ a:after,
   width: 0px;
   height: 3px;
   display: block;
-  background: #fbb0a9;
+  background: #132a41;
   transition: 300ms;
 }
 
@@ -23,6 +23,41 @@ a:hover:after,
 .selectUnderline:hover:after {
   width: 100%;
   color: #0e1c33;
+}
+
+.loginScreen {
+  background-image: url("../assets/Images/login-background.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+}
+
+.loginScreen {
+  text-align: center;
+}
+
+.formContainer {
+  text-align: center;
+  padding-top: 10%;
+
+}
+
+.loginFormContainer {
+  text-align: center;
+  height: 200px;
+  background-color: #cccccc;
+  opacity: 0.4;
+  box-shadow: 0 -1px 7px -1px rgba(70, 79, 76, 0.14);
+  border: 1px solid hsla(0, 0%, 76%, 0.34);
+  border-radius: 3px;
+  padding: 40px 19px;
+  display: block;
+}
+
+.loginForm {
+  opacity: 1;
 }
 
 .logo {
@@ -102,7 +137,6 @@ a:hover:after,
 .color-null {
   fill: gray;
   content: "Joe's Task:";
-
 }
 
 .react-calendar-heatmap text {
