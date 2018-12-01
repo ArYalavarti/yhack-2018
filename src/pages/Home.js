@@ -6,11 +6,12 @@ import Calendar from "./../components/Calendar";
 
 import "./../assets/Main.css";
 
+
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loaded: false
+      loaded: false,
     };
   }
 
