@@ -9,7 +9,7 @@ import "./../assets/Main.css";
 import "./../assets/Blocks.css";
 import "react-input-range/lib/css/index.css";
 
-import { calcColor } from "./../utils/utils";
+import { calcColor, getPhrase } from "./../utils/utils";
 
 const today = new Date();
 
@@ -137,14 +137,9 @@ class Calendar extends Component {
                     return `color-block-${value.colorValue}`;
                   }}
                   tooltipDataAttrs={value => {
-                    console.log(value);
-                    if (!value) {
-                      return "";
-                    } else {
                       return {
-                        "data-tip": `Day ${value.date.getDate()} : ${value.colorValue}`
+                        "data-tip": `Day ${value.date.getDate()} : ${getPhrase(value.colorValue)}`
                       };
-                    }
                   }}
                   onClick={value => {
                     if (value) {
