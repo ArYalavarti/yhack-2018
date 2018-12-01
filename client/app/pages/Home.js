@@ -47,6 +47,7 @@ class Home extends Component {
 
   componentDidMount() {
     const obj = getFromStorage("the_main_app");
+    console.log(obj);
     if (obj && obj.token) {
       const { token } = obj;
       // Verify token
@@ -56,7 +57,8 @@ class Home extends Component {
           if (json.success) {
             this.setState({
               token,
-              isLoading: false
+              isLoading: false,
+              data: obj.data
             });
           } else {
             this.setState({
@@ -159,16 +161,17 @@ class Home extends Component {
       .then(json => {
         console.log("json", json);
         if (json.success) {
-          setInStorage("the_main_app", { token: json.token });
+          setInStorage("the_main_app", { token: json.token, data: json.data });
           setTimeout(() => {
             this.setState({
               signInError: "",
               isLoading: false,
               signInPassword: "",
               signInEmail: "",
-              token: json.token
+              token: json.token,
+              data: json.data
             });
-          }, 1000);
+          }, 0);
         } else {
           this.setState({
             signInError: json.message,
@@ -216,8 +219,10 @@ class Home extends Component {
       signInPassword,
       signUpEmail,
       signUpPassword,
-      signUpError
+      signUpError,
+      data
     } = this.state;
+    console.log(data);
 
     if (!token) {
       return (
