@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, Form, Input, Icon } from "semantic-ui-react";
+import { Grid, Form, Input, Icon, Button } from "semantic-ui-react";
 import CalendarHeatmap from "react-calendar-heatmap";
 import ReactTooltip from "react-tooltip";
 import Modal from "react-responsive-modal";
@@ -66,6 +66,7 @@ class Calendar extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.shiftUp = this.shiftUp.bind(this);
     this.shiftDown = this.shiftDown.bind(this);
+    this.setToday = this.setToday.bind(this);
   }
 
   shiftUp() {
@@ -92,6 +93,16 @@ class Calendar extends Component {
       }
     } else {
     }
+  }
+
+  setToday() {
+    this.setState({
+      curMonth: today.getMonth(),
+      curYear: today.getFullYear(),
+      startDate: this.setStartDate(today),
+      endDate: this.getEndDate(today),
+      values: this.getValues(today)
+    });
   }
 
   shiftDown() {
@@ -258,7 +269,13 @@ class Calendar extends Component {
           onClick={this.shiftUp}
           name="arrow circle right"
         />
-        <div className="month">{monthNames[this.state.curMonth]} {this.state.curYear}</div>
+        <div className="month">
+          {monthNames[this.state.curMonth]} {this.state.curYear}
+        </div>
+        <Button onClick={this.setToday} className="today-button">
+          Today
+        </Button>
+
         <div className="calendar-container">
           <CalendarHeatmap
             startDate={this.shiftDate(this.state.startDate, -1)}

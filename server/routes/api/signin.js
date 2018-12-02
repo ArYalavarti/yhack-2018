@@ -214,7 +214,9 @@ module.exports = app => {
 
         user.set({ moodData: newData });
         user.save(function(err, updatedUser) {
-          if (err) return handleError(err);
+          if (err) {
+            console.log(err);
+          }
         });
 
         // Otherwise correct user

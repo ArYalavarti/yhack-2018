@@ -77,7 +77,7 @@ a:hover:after,
   background-color: #0e1c33;
   color: white;
   text-align: center;
-  font-size: 12px;
+  font-size: 16px;
   height: 22%;
   padding: 15px;
 }
@@ -105,10 +105,15 @@ a:hover:after,
   color: #979797;
   margin-top: 20px;
   font-size: 35px;
+  margin-bottom: 30px;
 }
 
 .logout-row {
   margin-bottom: 20px;
+}
+
+.today-button {
+  margin-right: 20px;
 }
 
 .logo {
