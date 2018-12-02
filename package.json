@@ -51,7 +51,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start:dev": "node server"
+    "start:dev": "node server",
+    "heroku-postbuild": "webpack -p"
   },
   "engines": {
     "node": ">=6"
@@ -64,5 +65,9 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "webpack-dev-server": "^3.1.10",
+    "wepback": "^1.0.0"
+  }
 }
