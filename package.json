@@ -47,12 +47,11 @@
     "whatwg-fetch": "^2.0.4"
   },
   "scripts": {
-    "start": "node server",
+    "start": "webpack -p --progress --profile --colors && node server",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start:dev": "node server",
-    "postinstall": "node server"
+    "start:dev": "node server"
   },
   "engines": {
     "node": ">=6"
