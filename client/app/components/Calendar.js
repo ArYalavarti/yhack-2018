@@ -12,8 +12,9 @@ import "react-input-range/lib/css/index.css";
 import "whatwg-fetch";
 import { getFromStorage, setInStorage } from "./../utils/storage.js";
 
-
 import { calcColor, getPhrase } from "./../utils/utils";
+
+const today = new Date();
 
 const monthNames = [
   "January",
@@ -30,6 +31,21 @@ const monthNames = [
   "December"
 ];
 
+const monthNames2 = [
+  "jan",
+  "feb",
+  "mar",
+  "apr",
+  "may",
+  "jun",
+  "jul",
+  "aug",
+  "sep",
+  "oct",
+  "nov",
+  "dec"
+];
+
 class Calendar extends Component {
   constructor(props) {
     super(props);
@@ -38,59 +54,74 @@ class Calendar extends Component {
       input1: 0,
       input2: 0,
       input3: 0,
-      startDate: this.setStartDate(),
-      endDate: this.getEndDate(),
-      values: props.data[0].dec
+      curMonth: today.getMonth(),
+      curYear: today.getFullYear(),
+      startDate: this.setStartDate(today),
+      endDate: this.getEndDate(today),
+      values: this.getValues(today)
     };
     //Function binding
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.shiftUp = this.shiftUp.bind(this);
   }
 
+  shiftUp() {
+    if (this.state.curMonth == 11) {
+      var newDate = new Date(this.state.curYear + 1, 0, 1);
+      console.log(newDate);
+      this.setState({
+        curMonth: 0,
+        curYear: this.state.curYear + 1,
+        startDate: this.setStartDate(newDate),
+        endDate: this.getEndDate(newDate),
+        values: this.getValues(newDate)
+      });
+    } else {
+      var newDate = new Date(this.state.curYear, this.state.curMonth + 1, 1);
+      console.log(newDate);
+      this.setState({
+        curMonth: this.state.curMonth + 1,
+        startDate: this.setStartDate(newDate),
+        endDate: this.getEndDate(newDate),
+        values: this.getValues(newDate)
+      });
+    }
+  }
   //Date Functions
-  setStartDate() {
-    const month = new Date().getMonth();
-    const year = new Date().getFullYear();
+  setStartDate(date) {
+    const month = date.getMonth();
+    const year = date.getFullYear();
 
-    return new Date(year + 1, month, 1);
+    return new Date(year, month, 1);
   }
 
-  getEndDate() {
-    const month = new Date().getMonth();
-    const year = new Date().getFullYear();
+  getValues(date) {
+    let mon = monthNames2[date.getMonth()];
+    console.log(mon);
+    console.log(this.props.data);
+    return this.props.data[date.getFullYear() - 2018][mon];
+  }
 
-    let d = new Date(year + 1, month, 1);
+  getEndDate(date) {
+    const month = date.getMonth();
+    const year = date.getFullYear();
 
-    return this.shiftDate(d, this.getNumDays(month));
+    let d = new Date(year, month, 1);
+    console.log(this.getNumDays(month) - 1);
+    return this.shiftDate(d, this.getNumDays(month) - 1);
   }
 
   getNumDays(date) {
-    if ([1, 3, 5, 7, 8, 10, 12].includes(date)) {
+    console.log(date + 1);
+    if ([1, 3, 5, 7, 8, 10, 12].includes(date + 1)) {
       return 31;
-    } else if ([4, 6, 9, 11].includes(date)) {
+    } else if ([4, 6, 9, 11].includes(date + 1)) {
       return 30;
     } else {
-      return 29;
+      return 28;
     }
-  }
-
-  getEmptyValues(date) {
-    var n = 0;
-    if ([1, 3, 5, 7, 8, 10, 12].includes(date.getMonth())) {
-      n = 31;
-    } else if ([4, 6, 9, 11].includes(date.getMonth())) {
-      n = 30;
-    } else {
-      n = 29;
-    }
-
-    return this.getRange(n).map(index => {
-      return {
-        date: this.shiftDate(this.getStartDate(), index),
-        colorValue: 0
-      };
-    });
   }
 
   getDateData(date) {
@@ -119,15 +150,18 @@ class Calendar extends Component {
   }
 
   handleSubmit(event) {
-  
     let cur = this.state.values;
     cur[this.state.date - 1] = {
       date: cur[this.state.date - 1].date,
       colorData: [this.state.input1, this.state.input2, this.state.input3]
     };
 
-    let cur2 = this.props.data
-    cur2[0].dec = cur;
+    let mon = monthNames2[this.state.curMonth];
+    console.log(mon);
+    console.log(this.props.data);
+
+    let cur2 = this.props.data;
+    cur2[this.state.curYear - 2018][mon] = cur;
 
     console.log(cur2);
 
@@ -150,13 +184,16 @@ class Calendar extends Component {
       .then(json => {
         console.log("json", json);
         if (json.success) {
-          setInStorage("the_main_app", { token: json.token, data: json.data, email: this.props.email });
+          setInStorage("the_main_app", {
+            token: json.token,
+            data: json.data,
+            email: this.props.email
+          });
           setTimeout(() => {
             this.setState({
               signInError: "",
               isLoading: false,
               token: json.token,
-              data: json.data,
               email: this.props.email
             });
           }, 0);
@@ -170,56 +207,41 @@ class Calendar extends Component {
     event.preventDefault();
   }
 
-  // handleSubmit(event) {
-  //   let cur = this.state.values;
-  //   cur[this.state.date - 1] = {
-  //     date: cur[this.state.date - 1].date,
-  //     colorData: [this.state.input1, this.state.input2, this.state.input3]
-  //   };
-  //   this.setState({ values: cur });
-  //   event.preventDefault();
-  // }
-
   componentDidMount() {}
 
   render() {
-    console.log(this.props.data);
+    console.log(this.state.curMonth);
+    console.log(this.state.curYear);
+    console.log(this.state);
+
     return (
       <div className="mainContainer">
         <Icon link size="big" name="arrow circle left" />
+        <Icon
+          link
+          size="big"
+          onClick={this.shiftUp}
+          name="arrow circle right"
+        />
         <div className="calendar-container">
           <CalendarHeatmap
             startDate={this.shiftDate(this.state.startDate, -1)}
             endDate={this.state.endDate}
             values={this.state.values}
-            showMonthLabels={false}
+            showMonthLabels={true}
             horizontal={false}
-            showWeekdayLabels={false}
+            showWeekdayLabels={true}
             showOutOfRangeDays={false}
             classForValue={value => {
-              let colorValue = calcColor(value.colorData);
               if (!value) {
                 return "color-null";
-              } else if (colorValue == 0) {
+              } else if (calcColor(value.colorData) == 0) {
                 return "color-empty";
               }
-              return `color-block-${colorValue}`;
+              return `color-block-${calcColor(value.colorData)}`;
             }}
             tooltipDataAttrs={value => {
-              return {
-                "data-tip": `Day ${new Date(
-                  value.date
-                ).getDate()} : ${getPhrase(calcColor(value.colorData))}`
-              };
 
-              //   console.log(value);
-              //   try {
-              //     "data-tip": `Day ${value.date.getDate()} : ${getPhrase(
-              //       value.colorValue
-              //     )}` }
-              // } catch (error) {
-              //   console.log(error);
-              //   }
             }}
             onClick={value => {
               if (value) {

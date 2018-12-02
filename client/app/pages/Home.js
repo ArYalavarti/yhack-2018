@@ -74,6 +74,17 @@ class Home extends Component {
     }
   }
 
+  initializeAllData() {
+    var out = []
+
+    for (var i = 0; i<4; i++) {
+
+      out.push(initializeData(2018 + i));
+    }
+    console.log(out);
+    return out;
+  }
+
   onTextboxChangeSignInEmail(event) {
     this.setState({
       signInEmail: event.target.value
@@ -106,8 +117,6 @@ class Home extends Component {
       isLoading: true
     });
 
-    console.log(initializeData(2019));
-
     // Post request to backend
     fetch("/api/account/signup", {
       method: "POST",
@@ -117,7 +126,7 @@ class Home extends Component {
       body: JSON.stringify({
         email: signUpEmail,
         password: signUpPassword,
-        moodData: initializeData(2019)
+        moodData: this.initializeAllData()
       })
     })
       .then(res => res.json())

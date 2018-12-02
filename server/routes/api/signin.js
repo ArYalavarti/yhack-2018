@@ -121,6 +121,7 @@ module.exports = app => {
         const userSession = new UserSession();
         userSession.userId = user._id;
         userSession.save((err, doc) => {
+          try {
           if (err) {
             console.log(err);
             return res.send({
@@ -135,6 +136,9 @@ module.exports = app => {
             token: doc._id,
             data: user.moodData
           });
+        } catch (error) {
+          console.log(error);
+        };  
         });
       }
     );
@@ -229,7 +233,7 @@ module.exports = app => {
             success: true,
             message: "Valid update",
             token: doc._id,
-            data: user.moodData
+            data: newData
           });
         });
       }
