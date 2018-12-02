@@ -99,10 +99,17 @@ a:hover:after,
 
 .calendar-container {
   text-align: center;
-  margin-left: 50px;
-  padding: 30px;
+  padding: 25px;
+  margin-left: 10vw;
   height: auto;
   width: 400px;
+}
+
+@media (max-width: 991px) {
+
+  .calendar-container {
+    margin-left: 30%;
+  }
 }
 
 .graph-container {

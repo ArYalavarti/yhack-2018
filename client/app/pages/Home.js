@@ -276,7 +276,7 @@ class Home extends Component {
                     <br />
                     <Input
                       type="email"
-                      placeholder="Email"
+                      placeholder="Username"
                       value={signInEmail}
                       onChange={this.onTextboxChangeSignInEmail}
                     />
@@ -313,7 +313,7 @@ class Home extends Component {
                     <br />
                     <Input
                       type="email"
-                      placeholder="Email"
+                      placeholder="Username"
                       value={signUpEmail}
                       onChange={this.onTextboxChangeSignUpEmail}
                     />

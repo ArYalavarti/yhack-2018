@@ -17,17 +17,6 @@ class Header extends Component {
           </Menu.Menu>
 
           <Menu.Menu position="right">
-            <Menu.Item>
-              <Icon className="nav-button" size="large" name="info circle" />
-            </Menu.Item>
-
-            <Menu.Item>
-              <Icon
-                className="nav-button"
-                size="large"
-                name="users"
-              />
-            </Menu.Item>
           </Menu.Menu>
         </Menu>
         <div className="ui divider" />

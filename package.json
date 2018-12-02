@@ -51,7 +51,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start:dev": "node server"
+    "start:dev": "node server",
+    "postinstall": "node server"
   },
   "engines": {
     "node": ">=6"

@@ -12,9 +12,10 @@ function adder(total, value, index, array) {
   return parseInt(total) + parseInt(value);
 }
 
-export function getPhrase(colorValue) {
+export function getPhrase(colorValue, colorData) {
   var phrase;
-  if (colorValue === 0) {
+  console.log(colorData);
+  if (colorData == [-1, -1, -1]) {
     phrase = "Have a nice day!"
   } else if (colorValue <= 126) {
     phrase = "Excellent";

@@ -282,14 +282,13 @@ class Calendar extends Component {
                     } else if (calcColor(value.colorData) == 0) {
                       return "color-empty";
                     }
-                    console.log(calcColor(value.colorData));
                     return `color-block-${calcColor(value.colorData)}`;
                   }}
                   tooltipDataAttrs={value => {
                     if ((value && Array.isArray(value.colorData))) {
                       return {
                         "data-tip": `Day ${new Date(value.date).getDate()} : ${
-                          getPhrase(calcColor(value.colorData))
+                          getPhrase(calcColor(value.colorData), value.colorData)
                         }`
                       };
                     } else {
