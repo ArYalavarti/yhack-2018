@@ -14,6 +14,6 @@ export class Stats extends Component {
             avg = Math.round((sum / data.length) * 10) / 10;
             std = getStd(data);
         }
-        return <div>Average: {avg} &nbsp; &nbsp; &nbsp; Standard Deviation: {std}</div>;
+        return <div style={{ paddingRight: "8%" }}>Average: {avg} &nbsp; &nbsp; &nbsp; Standard Deviation: {std}</div>;
     }
 }

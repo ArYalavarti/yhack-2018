@@ -93,7 +93,6 @@ a:hover:after,
 
 .mainContainer {
   text-align: center;
-  padding: 30px;
   min-height: 100vh;
 }
 
@@ -201,12 +200,15 @@ a:hover:after,
   display: flex;
   justify-content: center;
   vertical-align: center;
+  padding-left: 0;
+  transition: padding-left 0.5s;
 }
 
 .buttonsContainer {
-  height: 50px;
+  height: 25px;
   padding-top: 24.5px;
 }
+
 
 @keyframes App-logo-spin {
   from {
