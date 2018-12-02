@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Menu, Icon } from "semantic-ui-react";
+import { Menu, Icon, Modal, Button } from "semantic-ui-react";
 
 import logo from "./../../public/assets/Images/logo.png";
 import "../../public/assets/Main.css";
@@ -7,6 +7,9 @@ import "../../public/assets/Main.css";
 class Header extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      show: false
+    };
   }
   render() {
     return (

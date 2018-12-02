@@ -52,6 +52,7 @@ class Calendar extends Component {
     super(props);
     this.state = {
       show: false,
+      show2: false,
       input1: 0,
       input2: 0,
       input3: 0,
@@ -68,6 +69,16 @@ class Calendar extends Component {
     this.shiftUp = this.shiftUp.bind(this);
     this.shiftDown = this.shiftDown.bind(this);
     this.setToday = this.setToday.bind(this);
+    this.openModal2 = this.openModal2.bind(this);
+    this.closeModal2 = this.closeModal2.bind(this);
+  }
+  // Event handlers
+  openModal2() {
+    this.setState({ show2: true });
+  }
+
+  closeModal2() {
+    this.setState({ show2: false });
   }
 
   shiftUp() {
@@ -266,6 +277,12 @@ class Calendar extends Component {
               <Button onClick={this.setToday} className="today-button">
                 Today
               </Button>
+              <Button
+                color="navy"
+                icon="info"
+                className="nav-button"
+                onClick={this.openModal2}
+              />
 
               <div className="calendar-container">
                 <CalendarHeatmap
@@ -285,11 +302,14 @@ class Calendar extends Component {
                     return `color-block-${calcColor(value.colorData)}`;
                   }}
                   tooltipDataAttrs={value => {
-                    if ((value && Array.isArray(value.colorData))) {
+                    if (value && Array.isArray(value.colorData)) {
                       return {
-                        "data-tip": `Day ${new Date(value.date).getDate()} : ${
-                          getPhrase(calcColor(value.colorData), value.colorData)
-                        }`
+                        "data-tip": `Day ${new Date(
+                          value.date
+                        ).getDate()} : ${getPhrase(
+                          calcColor(value.colorData),
+                          value.colorData
+                        )}`
                       };
                     } else {
                     }
@@ -306,6 +326,21 @@ class Calendar extends Component {
                 />
               </div>
               <ReactTooltip />
+              <Modal
+                className="heroModal"
+                open={this.state.show2}
+                onClose={this.closeModal2}
+                center
+              >
+                <h2 className="modalHeading">Info!</h2>
+                <div className="modalBody">
+                  <p>Welcome to happyLog!
+                    <br/>
+                    Click on a square to enter your happiness, productivity, and sleep. <br/>Toggle between overall/happiness/productivity, or view data for <br/> certain days of the week. <br/>Happy logging!
+                  </p>
+                </div>
+              </Modal>
+
               <Modal
                 className="heroModal"
                 open={this.state.show}
