@@ -73,7 +73,7 @@ class Calendar extends Component {
     if (this.state.curYear < 2021) {
       if (this.state.curMonth == 11) {
         var newDate = new Date(this.state.curYear + 1, 0, 1);
-        console.log(newDate);
+
         this.setState({
           curMonth: 0,
           curYear: this.state.curYear + 1,
@@ -83,7 +83,7 @@ class Calendar extends Component {
         });
       } else {
         var newDate = new Date(this.state.curYear, this.state.curMonth + 1, 1);
-        console.log(newDate);
+
         this.setState({
           curMonth: this.state.curMonth + 1,
           startDate: this.setStartDate(newDate),
@@ -110,7 +110,7 @@ class Calendar extends Component {
     } else {
       if (this.state.curMonth == 0) {
         var newDate = new Date(this.state.curYear - 1, 11, 1);
-        console.log(newDate);
+
         this.setState({
           curMonth: 11,
           curYear: this.state.curYear - 1,
@@ -120,7 +120,7 @@ class Calendar extends Component {
         });
       } else {
         var newDate = new Date(this.state.curYear, this.state.curMonth - 1, 1);
-        console.log(newDate);
+
         this.setState({
           curMonth: this.state.curMonth - 1,
           startDate: this.setStartDate(newDate),
@@ -140,8 +140,6 @@ class Calendar extends Component {
 
   getValues(date) {
     let mon = monthNames2[date.getMonth()];
-    console.log(mon);
-    console.log(this.props.data);
     return this.props.data[date.getFullYear() - 2018][mon];
   }
 
@@ -150,12 +148,10 @@ class Calendar extends Component {
     const year = date.getFullYear();
 
     let d = new Date(year, month, 1);
-    console.log(this.getNumDays(month) - 1);
     return this.shiftDate(d, this.getNumDays(month) - 1);
   }
 
   getNumDays(date) {
-    console.log(date + 1);
     if ([1, 3, 5, 7, 8, 10, 12].includes(date + 1)) {
       return 31;
     } else if ([4, 6, 9, 11].includes(date + 1)) {
@@ -198,13 +194,9 @@ class Calendar extends Component {
     };
 
     let mon = monthNames2[this.state.curMonth];
-    console.log(mon);
-    console.log(this.props.data);
 
     let cur2 = this.props.data;
     cur2[this.state.curYear - 2018][mon] = cur;
-
-    console.log(cur2);
 
     this.setState({
       isLoading: true
@@ -251,10 +243,6 @@ class Calendar extends Component {
   componentDidMount() {}
 
   render() {
-    console.log(this.state.curMonth);
-    console.log(this.state.curYear);
-    console.log(this.state);
-
     return (
       <div className="mainContainer">
         <Icon

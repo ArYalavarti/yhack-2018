@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Menu, Icon } from "semantic-ui-react";
 
 import logo from "./../../public/assets/Images/logo.png";
+import "../../public/assets/Main.css";
 
 class Header extends Component {
   constructor(props) {

@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { Grid, Form, Input, Icon, Button } from "semantic-ui-react";
+import { Grid, Card, Input, Icon, Button } from "semantic-ui-react";
 import "whatwg-fetch";
 
 import { getFromStorage, setInStorage } from "./../utils/storage.js";
 import { initializeData } from "./../utils/utils.js";
+import Modal from "react-responsive-modal";
 
 import Header from "./../components/Header";
 import Footer from "./../components/Footer";
@@ -12,11 +13,13 @@ import DynamicGraph from "./../components/DynamicGraph";
 import LoadingScreen from "react-loading-screen";
 
 import "../../public/assets/Main.css";
+import logo from "./../../public/assets/Images/logo.png";
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      show: false,
       isLoading: true,
       token: "",
       signUpError: "",
@@ -42,11 +45,14 @@ class Home extends Component {
 
     this.onSignIn = this.onSignIn.bind(this);
     this.onSignUp = this.onSignUp.bind(this);
+    this.logout = this.logout.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidMount() {
     const obj = getFromStorage("the_main_app");
-    console.log(obj);
+
     if (obj && obj.token && obj.data) {
       const { token } = obj;
       // Verify token
@@ -79,7 +85,7 @@ class Home extends Component {
     for (var i = 0; i < 4; i++) {
       out.push(initializeData(2018 + i));
     }
-    console.log(out);
+
     return out;
   }
 
@@ -112,7 +118,10 @@ class Home extends Component {
     const { signUpEmail, signUpPassword } = this.state;
 
     this.setState({
-      isLoading: true
+      isLoading: true,
+      show: false,
+      signInError: "",
+      signUpError: ""
     });
 
     // Post request to backend
@@ -225,6 +234,13 @@ class Home extends Component {
       });
     }
   }
+  openModal() {
+    this.setState({ show: true });
+  }
+
+  closeModal() {
+    this.setState({ show: false });
+  }
 
   render() {
     const {
@@ -242,64 +258,83 @@ class Home extends Component {
     if (!token || (!data && !token) || isLoading) {
       return (
         <div>
-          <Header />
           <LoadingScreen
             loading={isLoading}
+            className="loading"
             bgColor="#f1f1f1"
-            spinnerColor="coral"
+            spinnerColor="hsl(212, 100%, 50%)"
             textColor="#676767"
-          />
-          <div className="homePageContainer">
-            <Grid padded centered>
-              <Grid.Row>
-                <div className="loginForm">
-                  {signInError ? <p>{signInError}</p> : null}
-                  <h2 className="selectUnderline">Sign In</h2>
-                  <br />
-                  <Input
-                    type="email"
-                    placeholder="Email"
-                    value={signInEmail}
-                    onChange={this.onTextboxChangeSignInEmail}
-                  />
-                  <br />
-                  <Input
-                    type="password"
-                    placeholder="Password"
-                    value={signInPassword}
-                    onChange={this.onTextboxChangeSignInPassword}
-                  />
-                  <br /> <br />
-                  <Button onClick={this.onSignIn}>Sign In</Button>
-                </div>
-              </Grid.Row>
+          >
+            <Header />
 
-              <Grid.Row>
-                <div className="loginForm">
-                  {signUpError ? <p>{signUpError}</p> : null}
-                  <h2 className="selectUnderline">Sign Up</h2>
-                  <br />
-                  <Input
-                    type="email"
-                    placeholder="Email"
-                    value={signUpEmail}
-                    onChange={this.onTextboxChangeSignUpEmail}
-                  />
-                  <br />
-                  <Input
-                    type="password"
-                    placeholder="Password"
-                    value={signUpPassword}
-                    onChange={this.onTextboxChangeSignUpPassword}
-                  />
-                  <br />
-                  <br />
-                  <Button onClick={this.onSignUp}>Sign Up</Button>
+            <div className="homePageContainer">
+              <Grid padded centered>
+                <img src={logo} className="logoMedium" />
+
+                <Grid.Row>
+                  <div className="loginForm">
+                    {signInError ? <p>{signInError}</p> : null}
+                    <h2 className="">Sign In</h2>
+                    <br />
+                    <Input
+                      type="email"
+                      placeholder="Email"
+                      value={signInEmail}
+                      onChange={this.onTextboxChangeSignInEmail}
+                    />
+                    <br />
+                    <Input
+                      type="password"
+                      placeholder="Password"
+                      value={signInPassword}
+                      onChange={this.onTextboxChangeSignInPassword}
+                    />
+                    <br /> <br />
+                    <Button onClick={this.onSignIn}>Sign In</Button>
+                  </div>
+                </Grid.Row>
+              </Grid>
+
+              <Button onClick={this.openModal}>Sign Up</Button>
+
+              <Modal
+                className="heroModal"
+                open={this.state.show}
+                onClose={this.closeModal}
+                center
+              >
+                <h2 className="modalHeading">Get started!</h2>
+                <div className="modalBody">
+                  <p> </p>
+                  <div className="loginForm">
+                    {signUpError ? <p>{signUpError}</p> : null}
+                    <h3 className="">
+                      Sign up with your email and get started <br /> using Mood
+                      Pro!
+                    </h3>
+                    <br />
+                    <Input
+                      type="email"
+                      placeholder="Email"
+                      value={signUpEmail}
+                      onChange={this.onTextboxChangeSignUpEmail}
+                    />
+                    <br />
+                    <Input
+                      type="password"
+                      placeholder="Password"
+                      value={signUpPassword}
+                      onChange={this.onTextboxChangeSignUpPassword}
+                    />
+                    <br />
+                    <br />
+                    <Button onClick={this.onSignUp}>Sign Up!</Button>
+                  </div>
                 </div>
-              </Grid.Row>
-            </Grid>
-          </div>
-          <Footer />
+              </Modal>
+            </div>
+            <Footer />
+          </LoadingScreen>
         </div>
       );
     }
@@ -307,7 +342,7 @@ class Home extends Component {
     return (
       <div className="homePageContainer">
         <Header />
-        <Grid doubling columns={2} divided>
+        <Grid doubling columns={2} divided className="gray">
           <Grid.Row>
             <Grid.Column>
               <Calendar data={data} email={signInEmail} />
