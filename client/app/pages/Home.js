@@ -42,7 +42,6 @@ class Home extends Component {
 
     this.onSignIn = this.onSignIn.bind(this);
     this.onSignUp = this.onSignUp.bind(this);
-    this.logout = this.logout.bind(this);
   }
 
   componentDidMount() {
@@ -75,10 +74,9 @@ class Home extends Component {
   }
 
   initializeAllData() {
-    var out = []
+    var out = [];
 
-    for (var i = 0; i<4; i++) {
-
+    for (var i = 0; i < 4; i++) {
       out.push(initializeData(2018 + i));
     }
     console.log(out);
@@ -171,7 +169,11 @@ class Home extends Component {
       .then(json => {
         console.log("json", json);
         if (json.success) {
-          setInStorage("the_main_app", { token: json.token, data: json.data, email: signInEmail });
+          setInStorage("the_main_app", {
+            token: json.token,
+            data: json.data,
+            email: signInEmail
+          });
           setTimeout(() => {
             this.setState({
               signInError: "",
@@ -202,18 +204,20 @@ class Home extends Component {
       fetch("/api/account/logout?token=" + token)
         .then(res => res.json())
         .then(json => {
-          if (json.success) {
-            this.setState({
-              token: "",
-              isLoading: false,
-              data: [],
-              email: null
-            });
-          } else {
-            this.setState({
-              isLoading: false
-            });
-          }
+          setTimeout(() => {
+            if (json.success) {
+              this.setState({
+                token: "",
+                isLoading: false,
+                data: [],
+                email: null
+              });
+            } else {
+              this.setState({
+                isLoading: false
+              });
+            }
+          }, 3000);
         });
     } else {
       this.setState({
@@ -235,70 +239,67 @@ class Home extends Component {
       data
     } = this.state;
 
-    if (!token || (!data && !token)) {
+    if (!token || (!data && !token) || isLoading) {
       return (
         <div>
+          <Header />
           <LoadingScreen
             loading={isLoading}
             bgColor="#f1f1f1"
             spinnerColor="coral"
             textColor="#676767"
-            text="Please Wait!"
           />
-
-          <Grid verticalAlign="middle" centered>
-            <Grid.Row centered>
-              <Grid.Column>
-                <div className="loginScreen">
-                  <div className="formContainer">
-                    <div className="loginForm">
-                      {signInError ? <p>{signInError}</p> : null}
-                      <h2 className="selectUnderline">Sign In</h2>
-                      <br />
-                      <Input
-                        type="email"
-                        placeholder="Email"
-                        value={signInEmail}
-                        onChange={this.onTextboxChangeSignInEmail}
-                      />
-                      <br />
-                      <Input
-                        type="password"
-                        placeholder="Password"
-                        value={signInPassword}
-                        onChange={this.onTextboxChangeSignInPassword}
-                      />
-                      <br /> <br />
-                      <Button onClick={this.onSignIn}>Sign In</Button>
-                    </div>
-                    <br />
-                    <br />
-                    <div className="loginForm">
-                      {signUpError ? <p>{signUpError}</p> : null}
-                      <h2 className="selectUnderline">Sign Up</h2>
-                      <br />
-                      <Input
-                        type="email"
-                        placeholder="Email"
-                        value={signUpEmail}
-                        onChange={this.onTextboxChangeSignUpEmail}
-                      />
-                      <br />
-                      <Input
-                        type="password"
-                        placeholder="Password"
-                        value={signUpPassword}
-                        onChange={this.onTextboxChangeSignUpPassword}
-                      />
-                      <br />
-                      <br />
-                      <Button onClick={this.onSignUp}>Sign Up</Button>
-                    </div>
-                  </div>
+          <div className="homePageContainer">
+            <Grid padded centered>
+              <Grid.Row>
+                <div className="loginForm">
+                  {signInError ? <p>{signInError}</p> : null}
+                  <h2 className="selectUnderline">Sign In</h2>
+                  <br />
+                  <Input
+                    type="email"
+                    placeholder="Email"
+                    value={signInEmail}
+                    onChange={this.onTextboxChangeSignInEmail}
+                  />
+                  <br />
+                  <Input
+                    type="password"
+                    placeholder="Password"
+                    value={signInPassword}
+                    onChange={this.onTextboxChangeSignInPassword}
+                  />
+                  <br /> <br />
+                  <Button onClick={this.onSignIn}>Sign In</Button>
                 </div>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
+              </Grid.Row>
+
+              <Grid.Row>
+                <div className="loginForm">
+                  {signUpError ? <p>{signUpError}</p> : null}
+                  <h2 className="selectUnderline">Sign Up</h2>
+                  <br />
+                  <Input
+                    type="email"
+                    placeholder="Email"
+                    value={signUpEmail}
+                    onChange={this.onTextboxChangeSignUpEmail}
+                  />
+                  <br />
+                  <Input
+                    type="password"
+                    placeholder="Password"
+                    value={signUpPassword}
+                    onChange={this.onTextboxChangeSignUpPassword}
+                  />
+                  <br />
+                  <br />
+                  <Button onClick={this.onSignUp}>Sign Up</Button>
+                </div>
+              </Grid.Row>
+            </Grid>
+          </div>
+          <Footer />
         </div>
       );
     }
@@ -315,8 +316,12 @@ class Home extends Component {
               <DynamicGraph />
             </Grid.Column>
           </Grid.Row>
+          <Grid.Row centered>
+            <div className="logout-row">
+              <Button onClick={this.logout}>Logout</Button>
+            </div>
+          </Grid.Row>
         </Grid>
-        <Button onClick={this.logout}>Logout</Button>
         <Footer />
       </div>
     );

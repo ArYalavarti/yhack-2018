@@ -258,12 +258,13 @@ class Calendar extends Component {
           onClick={this.shiftUp}
           name="arrow circle right"
         />
+        <div className="month">{monthNames[this.state.curMonth]} {this.state.curYear}</div>
         <div className="calendar-container">
           <CalendarHeatmap
             startDate={this.shiftDate(this.state.startDate, -1)}
             endDate={this.state.endDate}
             values={this.state.values}
-            showMonthLabels={true}
+            showMonthLabels={false}
             horizontal={false}
             showWeekdayLabels={true}
             showOutOfRangeDays={false}
@@ -288,7 +289,6 @@ class Calendar extends Component {
           />
         </div>
         <ReactTooltip />
-
         <Modal
           className="heroModal"
           open={this.state.show}
