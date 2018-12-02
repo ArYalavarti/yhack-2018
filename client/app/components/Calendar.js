@@ -65,28 +65,58 @@ class Calendar extends Component {
     this.closeModal = this.closeModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.shiftUp = this.shiftUp.bind(this);
+    this.shiftDown = this.shiftDown.bind(this);
   }
 
   shiftUp() {
-    if (this.state.curMonth == 11) {
-      var newDate = new Date(this.state.curYear + 1, 0, 1);
-      console.log(newDate);
-      this.setState({
-        curMonth: 0,
-        curYear: this.state.curYear + 1,
-        startDate: this.setStartDate(newDate),
-        endDate: this.getEndDate(newDate),
-        values: this.getValues(newDate)
-      });
+    if (this.state.curYear < 2021) {
+      if (this.state.curMonth == 11) {
+        var newDate = new Date(this.state.curYear + 1, 0, 1);
+        console.log(newDate);
+        this.setState({
+          curMonth: 0,
+          curYear: this.state.curYear + 1,
+          startDate: this.setStartDate(newDate),
+          endDate: this.getEndDate(newDate),
+          values: this.getValues(newDate)
+        });
+      } else {
+        var newDate = new Date(this.state.curYear, this.state.curMonth + 1, 1);
+        console.log(newDate);
+        this.setState({
+          curMonth: this.state.curMonth + 1,
+          startDate: this.setStartDate(newDate),
+          endDate: this.getEndDate(newDate),
+          values: this.getValues(newDate)
+        });
+      }
     } else {
-      var newDate = new Date(this.state.curYear, this.state.curMonth + 1, 1);
-      console.log(newDate);
-      this.setState({
-        curMonth: this.state.curMonth + 1,
-        startDate: this.setStartDate(newDate),
-        endDate: this.getEndDate(newDate),
-        values: this.getValues(newDate)
-      });
+    }
+  }
+
+  shiftDown() {
+    if (this.state.curMonth == 0 && this.state.curYear == 2018) {
+    } else {
+      if (this.state.curMonth == 0) {
+        var newDate = new Date(this.state.curYear - 1, 11, 1);
+        console.log(newDate);
+        this.setState({
+          curMonth: 11,
+          curYear: this.state.curYear - 1,
+          startDate: this.setStartDate(newDate),
+          endDate: this.getEndDate(newDate),
+          values: this.getValues(newDate)
+        });
+      } else {
+        var newDate = new Date(this.state.curYear, this.state.curMonth - 1, 1);
+        console.log(newDate);
+        this.setState({
+          curMonth: this.state.curMonth - 1,
+          startDate: this.setStartDate(newDate),
+          endDate: this.getEndDate(newDate),
+          values: this.getValues(newDate)
+        });
+      }
     }
   }
   //Date Functions
@@ -216,7 +246,12 @@ class Calendar extends Component {
 
     return (
       <div className="mainContainer">
-        <Icon link size="big" name="arrow circle left" />
+        <Icon
+          onClick={this.shiftDown}
+          link
+          size="big"
+          name="arrow circle left"
+        />
         <Icon
           link
           size="big"
@@ -240,9 +275,7 @@ class Calendar extends Component {
               }
               return `color-block-${calcColor(value.colorData)}`;
             }}
-            tooltipDataAttrs={value => {
-
-            }}
+            tooltipDataAttrs={value => {}}
             onClick={value => {
               if (value) {
                 this.setState({
