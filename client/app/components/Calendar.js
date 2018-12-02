@@ -8,6 +8,7 @@ import InputRange from "react-input-range";
 import "../../public/assets/Main.css";
 import "../../public/assets/Blocks.css";
 import "react-input-range/lib/css/index.css";
+import DynamicGraph from "./../components/DynamicGraph";
 
 import "whatwg-fetch";
 import { getFromStorage, setInStorage } from "./../utils/storage.js";
@@ -215,7 +216,6 @@ class Calendar extends Component {
     })
       .then(res => res.json())
       .then(json => {
-        console.log("json", json);
         if (json.success) {
           setInStorage("the_main_app", {
             token: json.token,
@@ -245,6 +245,10 @@ class Calendar extends Component {
   render() {
     return (
       <div className="mainContainer">
+        <Grid doubling columns={2} divided className="gray">
+          <Grid.Row>
+            <Grid.Column>
+
         <Icon
           onClick={this.shiftDown}
           link
@@ -337,7 +341,23 @@ class Calendar extends Component {
             </Form>
           </div>
         </Modal>
+
+            </Grid.Column>
+
+            <Grid.Column>
+            <DynamicGraph 
+                years={this.props.data}
+                currentMonth={this.state.curMonth + (12 * (this.state.curYear - 2018))}
+              />
+
+            </Grid.Column>
+
+          </Grid.Row>
+        </Grid>
+
+
       </div>
+      
     );
   }
 }

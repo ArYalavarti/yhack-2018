@@ -9,7 +9,6 @@ import Modal from "react-responsive-modal";
 import Header from "./../components/Header";
 import Footer from "./../components/Footer";
 import Calendar from "./../components/Calendar";
-import DynamicGraph from "./../components/DynamicGraph";
 import LoadingScreen from "react-loading-screen";
 
 import "../../public/assets/Main.css";
@@ -176,7 +175,6 @@ class Home extends Component {
     })
       .then(res => res.json())
       .then(json => {
-        console.log("json", json);
         if (json.success) {
           setInStorage("the_main_app", {
             token: json.token,
@@ -342,21 +340,11 @@ class Home extends Component {
     return (
       <div className="homePageContainer">
         <Header />
-        <Grid doubling columns={2} divided className="gray">
-          <Grid.Row>
-            <Grid.Column>
-              <Calendar data={data} email={signInEmail} />
-            </Grid.Column>
-            <Grid.Column>
-              <DynamicGraph />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row centered>
-            <div className="logout-row">
-              <Button onClick={this.logout}>Logout</Button>
-            </div>
-          </Grid.Row>
-        </Grid>
+        <Calendar data={data} email={signInEmail} />
+        <div className="logout-row">
+            <Button onClick={this.logout}>Logout</Button>
+        </div>
+
         <Footer />
       </div>
     );
