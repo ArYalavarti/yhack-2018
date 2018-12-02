@@ -6,7 +6,7 @@ This is the source code for happyLog, designed and built at YHack 2018.
 
 Download this repository:
 
-`git clone https://github.com/ArYalavarti/yhack-2018.git`=
+`git clone https://github.com/ArYalavarti/yhack-2018.git`
 
 Then download the necessary packages using `npm install`. 
 
