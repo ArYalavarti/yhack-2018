@@ -248,116 +248,121 @@ class Calendar extends Component {
         <Grid doubling columns={2} divided className="gray">
           <Grid.Row>
             <Grid.Column>
-
-        <Icon
-          onClick={this.shiftDown}
-          link
-          size="big"
-          name="arrow circle left"
-        />
-        <Icon
-          link
-          size="big"
-          onClick={this.shiftUp}
-          name="arrow circle right"
-        />
-        <div className="month">
-          {monthNames[this.state.curMonth]} {this.state.curYear}
-        </div>
-        <Button onClick={this.setToday} className="today-button">
-          Today
-        </Button>
-
-        <div className="calendar-container">
-          <CalendarHeatmap
-            startDate={this.shiftDate(this.state.startDate, -1)}
-            endDate={this.state.endDate}
-            values={this.state.values}
-            showMonthLabels={false}
-            horizontal={false}
-            showWeekdayLabels={true}
-            showOutOfRangeDays={false}
-            classForValue={value => {
-              if (!value) {
-                return "color-null";
-              } else if (calcColor(value.colorData) == 0) {
-                return "color-empty";
-              }
-              return `color-block-${calcColor(value.colorData)}`;
-            }}
-            tooltipDataAttrs={value => {}}
-            onClick={value => {
-              if (value) {
-                this.setState({
-                  currentDate: this.getDateData(new Date(value.date))
-                });
-                this.setState({ date: new Date(value.date).getDate() });
-                this.openModal();
-              }
-            }}
-          />
-        </div>
-        <ReactTooltip />
-        <Modal
-          className="heroModal"
-          open={this.state.show}
-          onClose={this.closeModal}
-          center
-        >
-          <h2 className="modalHeading">Update Mood!</h2>
-          <div className="modalBody">
-            <p> Update your mood for {this.state.currentDate} </p>
-            <Form onSubmit={this.handleSubmit}>
-              Happiness <br /> <br />
-              <InputRange
-                maxValue={10}
-                minValue={0}
-                value={this.state.input1}
-                onChange={value => this.setState({ input1: value })}
+              <Icon
+                onClick={this.shiftDown}
+                link
+                size="big"
+                name="arrow circle left"
               />
-              <br />
-              <br />
-              Productivity <br />
-              <br />
-              <InputRange
-                maxValue={10}
-                minValue={0}
-                value={this.state.input2}
-                onChange={value => this.setState({ input2: value })}
+              <Icon
+                link
+                size="big"
+                onClick={this.shiftUp}
+                name="arrow circle right"
               />
-              <br />
-              <br />
-              Sleep <br />
-              <br />
-              <InputRange
-                maxValue={10}
-                minValue={0}
-                value={this.state.input3}
-                onChange={value => this.setState({ input3: value })}
-              />
-              <br />
-              <br />
-              <Input type="submit" value="Submit" />
-            </Form>
-          </div>
-        </Modal>
+              <div className="month">
+                {monthNames[this.state.curMonth]} {this.state.curYear}
+              </div>
+              <Button onClick={this.setToday} className="today-button">
+                Today
+              </Button>
 
+              <div className="calendar-container">
+                <CalendarHeatmap
+                  startDate={this.shiftDate(this.state.startDate, -1)}
+                  endDate={this.state.endDate}
+                  values={this.state.values}
+                  showMonthLabels={false}
+                  horizontal={false}
+                  showWeekdayLabels={true}
+                  showOutOfRangeDays={true}
+                  classForValue={value => {
+                    if (!value) {
+                      return "color-empty";
+                    } else if (calcColor(value.colorData) == 0) {
+                      return "color-empty";
+                    }
+                    console.log(calcColor(value.colorData));
+                    return `color-block-${calcColor(value.colorData)}`;
+                  }}
+                  tooltipDataAttrs={value => {
+                    if ((value && Array.isArray(value.colorData))) {
+                      return {
+                        "data-tip": `Day ${new Date(value.date).getDate()} : ${
+                          getPhrase(calcColor(value.colorData))
+                        }`
+                      };
+                    } else {
+                    }
+                  }}
+                  onClick={value => {
+                    if (value) {
+                      this.setState({
+                        currentDate: this.getDateData(new Date(value.date))
+                      });
+                      this.setState({ date: new Date(value.date).getDate() });
+                      this.openModal();
+                    }
+                  }}
+                />
+              </div>
+              <ReactTooltip />
+              <Modal
+                className="heroModal"
+                open={this.state.show}
+                onClose={this.closeModal}
+                center
+              >
+                <h2 className="modalHeading">Update Mood!</h2>
+                <div className="modalBody">
+                  <p> Update your mood for {this.state.currentDate} </p>
+                  <Form onSubmit={this.handleSubmit}>
+                    Happiness <br /> <br />
+                    <InputRange
+                      maxValue={10}
+                      minValue={0}
+                      value={this.state.input1}
+                      onChange={value => this.setState({ input1: value })}
+                    />
+                    <br />
+                    <br />
+                    Productivity <br />
+                    <br />
+                    <InputRange
+                      maxValue={10}
+                      minValue={0}
+                      value={this.state.input2}
+                      onChange={value => this.setState({ input2: value })}
+                    />
+                    <br />
+                    <br />
+                    Sleep <br />
+                    <br />
+                    <InputRange
+                      maxValue={10}
+                      minValue={0}
+                      value={this.state.input3}
+                      onChange={value => this.setState({ input3: value })}
+                    />
+                    <br />
+                    <br />
+                    <Input type="submit" value="Submit" />
+                  </Form>
+                </div>
+              </Modal>
             </Grid.Column>
 
             <Grid.Column>
-            <DynamicGraph 
+              <DynamicGraph
                 years={this.props.data}
-                currentMonth={this.state.curMonth + (12 * (this.state.curYear - 2018))}
+                currentMonth={
+                  this.state.curMonth + 12 * (this.state.curYear - 2018)
+                }
               />
-
             </Grid.Column>
-
           </Grid.Row>
         </Grid>
-
-
       </div>
-      
     );
   }
 }
